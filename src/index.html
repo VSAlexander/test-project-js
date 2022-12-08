@@ -40,20 +40,30 @@
           <div class="about-movie">
             <h2 class="movie-header"></h2>
             <p class="ratings-wrapper">
-              Vote / Votes: <span class="vote"></span>
-              <span class="votes"></span>
+              Vote / Votes: <span class="vote"></span>/<span
+                class="votes"
+              ></span>
             </p>
             <p class="popularity-wrapper">
-              Popularity: <span class="popularity"></span>
+              Popularity: <span class="popularity-modal"></span>
             </p>
             <p class="original_title-wrapper">
-              Original Title: <span class="original_title"></span>
+              Original Title: <span class="original_title-modal"></span>
             </p>
-            <p class="genres-wrapper">Genres: <span class="genres"></span></p>
+            <p class="genres-wrapper">
+              Genres: <span class="genres-modal"></span>
+            </p>
             <span>About</span>
-            <p class="overview"></p>
+            <p class="overview-modal"></p>
+            <ul class="buttons">
+              <button class="buttons__list" type="submit">
+                ADD TO WATCHED
+              </button>
+              <button class="buttons__list" type="submit">ADD TO QUEUE</button>
+            </ul>
           </div>
         </div>
+        <button type="button" class="button-close-modal">ⓧ</button>
       </div>
     </div>
     <script type="module" src="./index.js"></script>

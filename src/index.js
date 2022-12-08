@@ -75,26 +75,29 @@ async function getMovies(page = 1) {
 
     moviesList.querySelectorAll('.movies-list__item').forEach(function (el) {
       el.addEventListener('click', event => {
-        console.log(event.currentTarget);
+        // console.log(event.currentTarget);
+        document.body.style.overflow = 'hidden';
+
         const li = event.currentTarget;
         const thumb = li.querySelector('.movies-list__item-thumb').innerHTML;
-        console.log(thumb);
         const title = li.querySelector('.movies-list__item-title').textContent;
         const votes = li.querySelector('.vote_count').textContent;
         const vote = li.querySelector('.rating').textContent;
         const popularity = li.querySelector('.popularity').textContent;
         const original_title = li.querySelector('.original_title').textContent;
-        const genres = li.querySelector('.movies-list__item-info').textContent;
+        const genres = li.querySelector('.genres').textContent;
         const overview = li.querySelector('.overview').textContent;
 
         document.querySelector('.image-thumb').innerHTML = thumb;
         document.querySelector('.movie-header').innerHTML = title;
         document.querySelector('.vote').innerHTML = vote;
         document.querySelector('.votes').innerHTML = votes;
-        document.querySelector('.popularity').innerHTML = popularity;
-        document.querySelector('.original_title').innerHTML = original_title;
-        document.querySelector('.genres').innerHTML = genres;
-        document.querySelector('.overview').innerHTML = overview;
+        document.querySelector('.popularity-modal').innerHTML = popularity;
+        document.querySelector('.original_title-modal').innerHTML =
+          original_title;
+        document.querySelector('.genres-modal').innerHTML =
+          checkLengthOfGenres(genres);
+        document.querySelector('.overview-modal').innerHTML = overview;
 
         backdrop.classList.remove('is-hidden');
       });
@@ -123,7 +126,7 @@ function renderMovieCards(data) {
           class="movies-list__item-card-img lozad"
           data-src="https://image.tmdb.org/t/p/w342${movie.poster_path}"
           data-srcset="https://image.tmdb.org/t/p/w342${movie.poster_path} 1x,
-          https://image.tmdb.org/t/p/w500${movie.poster_path} 2x"
+          https://image.tmdb.org/t/p/w780${movie.poster_path} 2x"
 
           alt="${movie.title}">
       </div>
@@ -145,6 +148,7 @@ function renderMovieCards(data) {
           1
         )}</span>
         <span class="popularity hidden">${movie.popularity.toFixed(1)}</span>
+        <span class="genres hidden">${movie.genre_ids}</span>
         <span class="overview hidden">${movie.overview}</span>
         <span class="original_title hidden">${movie.original_title}</span>
         </li>`
@@ -172,6 +176,20 @@ function checkLengthOfGenres(array) {
 //////////////////////////////////////
 
 getMovies();
+
+backdrop.addEventListener(
+  'click',
+  function (event) {
+    if (
+      event.target.matches('.button-close-modal') ||
+      !event.target.closest('.modal')
+    ) {
+      backdrop.classList.add('is-hidden');
+      document.body.style.overflow = 'scroll';
+    }
+  },
+  false
+);
 
 // const allItems = moviesList.children;
 
