@@ -1,12 +1,15 @@
 import axios from 'axios';
+import lozad from 'lozad';
+var imagesLoaded = require('imagesloaded');
 
 const moviesList = document.querySelector('.movies-list');
+const spinner = document.querySelector('.lds-spinner');
 
 const API_KEY = '2954afe7c35181c36bf30aa4bc9ce527';
 
+const observer = lozad();
+// observer.observe();
 /////////    GENRES     /////////
-
-console.log('Hello');
 
 async function fetchGenres() {
   if (localStorage.getItem('genres') !== null) {
@@ -59,6 +62,8 @@ const infiniteObserver = new IntersectionObserver(([entry], observer) => {
 
 ///////////// FETCH TRENDING MOVIES  /////////////
 
+const backdrop = document.querySelector('.backdrop');
+
 async function getMovies(page = 1) {
   try {
     const response = await axios.get(
@@ -66,6 +71,34 @@ async function getMovies(page = 1) {
     );
 
     moviesList.innerHTML += renderMovieCards(response.data.results);
+    observer.observe();
+
+    moviesList.querySelectorAll('.movies-list__item').forEach(function (el) {
+      el.addEventListener('click', event => {
+        console.log(event.currentTarget);
+        const li = event.currentTarget;
+        const thumb = li.querySelector('.movies-list__item-thumb').innerHTML;
+        console.log(thumb);
+        const title = li.querySelector('.movies-list__item-title').textContent;
+        const votes = li.querySelector('.vote_count').textContent;
+        const vote = li.querySelector('.rating').textContent;
+        const popularity = li.querySelector('.popularity').textContent;
+        const original_title = li.querySelector('.original_title').textContent;
+        const genres = li.querySelector('.movies-list__item-info').textContent;
+        const overview = li.querySelector('.overview').textContent;
+
+        document.querySelector('.image-thumb').innerHTML = thumb;
+        document.querySelector('.movie-header').innerHTML = title;
+        document.querySelector('.vote').innerHTML = vote;
+        document.querySelector('.votes').innerHTML = votes;
+        document.querySelector('.popularity').innerHTML = popularity;
+        document.querySelector('.original_title').innerHTML = original_title;
+        document.querySelector('.genres').innerHTML = genres;
+        document.querySelector('.overview').innerHTML = overview;
+
+        backdrop.classList.remove('is-hidden');
+      });
+    });
 
     const lastCard = document.querySelector('.movies-list__item:last-child');
     // console.log(lastCard);
@@ -87,10 +120,10 @@ function renderMovieCards(data) {
       movie => `<li class="movies-list__item">
       <div class="movies-list__item-thumb">
         <img loading="lazy"
-          class="movies-list__item-card-img"
-          src="https://image.tmdb.org/t/p/w342${movie.poster_path}"
-          srcset="https://image.tmdb.org/t/p/w342${movie.poster_path} 1x,
-          https://image.tmdb.org/t/p/w780${movie.poster_path} 2x"
+          class="movies-list__item-card-img lozad"
+          data-src="https://image.tmdb.org/t/p/w342${movie.poster_path}"
+          data-srcset="https://image.tmdb.org/t/p/w342${movie.poster_path} 1x,
+          https://image.tmdb.org/t/p/w500${movie.poster_path} 2x"
 
           alt="${movie.title}">
       </div>
@@ -106,6 +139,14 @@ function renderMovieCards(data) {
           : 'No info'
       } <span class="rating">${movie.vote_average.toFixed(1)}</span></p>
         </div>
+
+        <span class="vote_count hidden">${movie.vote_count}</span>
+        <span class="vote_average hidden">${movie.vote_average.toFixed(
+          1
+        )}</span>
+        <span class="popularity hidden">${movie.popularity.toFixed(1)}</span>
+        <span class="overview hidden">${movie.overview}</span>
+        <span class="original_title hidden">${movie.original_title}</span>
         </li>`
     )
     .join('');
@@ -132,44 +173,9 @@ function checkLengthOfGenres(array) {
 
 getMovies();
 
-// function removeRating() {
-//   const allRatings = document.querySelectorAll('.rating');
-//   allRatings.style.display = 'none';
-//   console.log(allRatings);
-// }
+// const allItems = moviesList.children;
 
-// window.onload = function () {
-//   spinner.style.display = 'none';
-// };
-
-// document.addEventListener('DOMContentLoaded', () => {
-//   spinner.style.display = 'none';
-
-//   const options = {
-//     root: null,
-//     rootMargins: '0px',
-//     threshold: 0.7,
-//   };
-
-//   const observer = new IntersectionObserver(handleIntersect, options);
-
-//   observer.observe(document.querySelector('footer'));
-
-//   getMovies();
+// moviesList.children.addEventListener('click', event => {
+//   console.log(event.currentTarget);
+//   // const item = event.currentTarget.firstElementChild;
 // });
-
-// function handleIntersect(entries) {
-//   if (entries[0].isIntersecting) {
-//     console.log('Footer');
-//     getMovies();
-//   }
-// }
-
-// const cardsAndButtons = new List('wrapper', {
-//   valueNames: ['movies-list__item name'],
-//   outerWindow: 1,
-//   page: totalPages,
-//   pagination: true,
-// });
-
-// PAGINATION ///////////////////////////////////////////// OLD VERSION
